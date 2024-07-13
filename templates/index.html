@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8"/>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename= 'style.css') }}"/>
+    <script
+      type="text/javscript"
+      src="{{ url_for('static', filename= 'script.js') }}"
+    ></script>
+    <script>
+      function cb(selection, colname) {
+        $.getJSON({
+          url: "/callback",
+          data: { data: selection },
+          success: function (result) {
+            Plotly.react("" + colname, result, {});
+          },
+        });
+      }
+    </script>
+    <title>Smart Garden UI</title>
+  </head>
+  <body>
+    <div class="col-sm-7 mx-auto">
+      <header class="section-header text-center">
+        <h2>Analytics</h2>
+      </header>
+    </div>
+    <div id="flex-container" class="testimonials">
+      <div id="left-zone">
+        <ul class="list">
+          <li class="item">
+            <input
+              type="radio"
+              id="radio_testimonial-1"
+              name="basic_carousel"
+              checked="checked"
+              onclick="cb('temp', 'chart_temp')"
+            />
+
+            <label class="label_testimonial-1" for="radio_testimonial-1"
+            >Temperature</label
+            >
+            <div class="content-test content_testimonial-1">
+              <div id="chart_temp"></div>
+            </div>
+          </li>
+          <li class="item">
+            <input
+              type="radio"
+              id="radio_testimonial-2"
+              name="basic_carousel"
+              onclick="cb('air_humidity', 'chart_air')"
+            />
+            <label class="label_testimonial-2" for="radio_testimonial-2"
+            >Air Humidity</label
+            >
+            <div class="content-test content_testimonial-2">
+              <div id="chart_air"></div>
+              <br/>
+            </div>
+          </li>
+          <li class="item">
+            <input
+              type="radio"
+              id="radio_testimonial-3"
+              name="basic_carousel"
+              onclick="cb('soil_humidity', 'chart_soil')"
+            />
+            <label class="label_testimonial-3" for="radio_testimonial-3"
+            >Soil Humidity</label
+            >
+            <div class="content-test content_testimonial-3">
+              <div id="chart_soil"></div>
+            </div>
+          </li>
+          <li class="item">
+            <input
+              type="radio"
+              id="radio_testimonial-4"
+              name="basic_carousel"
+              onclick="cb('luminance', 'chart_lum')"
+            />
+            <label class="label_testimonial-4" for="radio_testimonial-4"
+            >Luminance</label
+            >
+            <div class="content-test content_testimonial-4">
+              <div id="chart_lum"></div>
+              <br/>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div id="right-zone"></div>
+    </div>
+  </body>
+</html>

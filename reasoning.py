@@ -28,12 +28,12 @@ import time
                     self.reasoner.set_input_data(response)
                time.sleep(5)'''
 
-class Reasoner(Process):
-     def __init__(self, out_queue, gateway, planner_timeout=5):
-          super(Reasoner, self).__init__()
+class Reasoner():
+     def __init__(self, planner_timeout=5):
+          #super(Reasoner, self).__init__()
           self.input_data = []
-          self.gateway = gateway
-          self.out_queue = out_queue
+          g = gateway.Gateway()
+          self.gateway = g
           self.planner_timeout = planner_timeout
 
      def contextualize_input_data(self, input_data):
@@ -41,7 +41,7 @@ class Reasoner(Process):
 
           context = []
 
-          if "abc" in self.input_data:
+          if not a:
                context += ["tank-full s"]
           if a:
                context += ["refill-indicator-light-on s"]
@@ -51,7 +51,7 @@ class Reasoner(Process):
                context += ["low-soil-hum s"]
           if a:
                context += ["too-bright s"]
-          if a:
+          if not a:
                context += ["too-dark s"]
           if a:
                context += ["too-warm s"]
@@ -104,7 +104,7 @@ class Reasoner(Process):
           cwd = os.getcwd()
           return cwd + '/' + filename
 
-     def invoke_planner(self, domfile, probfile, planner='/home/amel/sciot/FF-v2.3/./ff'):
+     def invoke_planner(self, domfile, probfile, planner):
           #/home/amel/sciot/FF-v2.3/./ff -o /home/amel/dev/sciot/garden_domain.pddl -f /home/amel/dev/sciot/garden_problem.pddl
           result = subprocess.run([planner, '-o', domfile, '-f', probfile], stdout=subprocess.PIPE)
           resultstring = result.stdout.decode('utf-8')
@@ -115,19 +115,21 @@ class Reasoner(Process):
                return None
 
           actions_to_execute = []
-          b = -1
+          valid_plan = -1
           for item in resultstring.split("\n"):
                if "found legal plan as follows" in item:
-                   b = 0
+                   valid_plan = 0
                elif "goal can be simplified to TRUE. The empty plan solves it" in item:
                     return actions_to_execute
                elif "goal can be simplified to FALSE. No plan will solve it" in item:
                     return None
 
           # problem step 0 matches this pattern: we need the collect all lines following 'step 0...'
-          if (b == 0):
+          if (valid_plan == 0):
+               plan_section = False
                for line in resultstring.split("\n"):
                     if  re.match("step[\s]*[0]:\s", line):
+                         plan_section = True
                          x = re.sub("step[\s]*[0-9]+:\s", "", line)
                          actions_to_execute += [x]
 
@@ -142,7 +144,7 @@ class Reasoner(Process):
      def execute_actions(self, list_of_actions):
           for item in list_of_actions:
                if (item == "WATER_PLANT"):
-                    self.gateway.water_pump()
+                    self.gateway.water_pump_on()
                elif (item == "TURN_ON_LIGHT"):
                     self.gateway.light(True)
                elif (item == "TURN_OFF_LIGHT"):
@@ -152,26 +154,28 @@ class Reasoner(Process):
                elif (item == "TURN_OFF_FAN"):
                     self.gateway.fan(False)
                elif (item == "REFILL_TANK_LIGHT_ON"):
-                    self.gateway.tank_light(True)
+                    self.gateway.indicator_led(True)
                elif (item == "REFILL_TANK_LIGHT_OFF"):
-                    self.gateway.tank_light(False)
+                    self.gateway.indicator_led(False)
                elif (item == "OPEN_LID"):
-                    self.gateway.open_lid(True)
+                    self.gateway.servo(True)
                elif (item == "CLOSE_LID"):
-                    self.gateway.open_lid(False)
+                    self.gateway.servo(False)
 
      def get_fresh_input_data(self):
           dbms_address = ('localhost', 6000)
           
-          no_data_blocks = 1
+          request_timeout = 10
+          no_data_blocks = 3
           while True:
                with Client(dbms_address, authkey=b'pw') as conn:
-                    conn.send(["get", no_data_blocks])
+                    conn.send(["get", "act_states", no_data_blocks])
                     response = conn.recv()
+                    print(response)
                     self.input_data = response
-               time.sleep(5)
+               time.sleep(request_timeout)
 
-     def run(self):
+     def start(self):
           t1 = threading.Thread(target=self.get_fresh_input_data)
           t1.start()
 
@@ -180,14 +184,15 @@ class Reasoner(Process):
                probfile = self.create_probfile(init_planner_states)
 
                #old_probfile = '/home/amel/dev/sciot/garden_problem.pddl'
-               planner = '/home/amel/sciot/FF-v2.3/./ff'
-               planner_actions = self.invoke_planner('/home/amel/dev/sciot/garden_domain.pddl', probfile, planner)
+
+               planner = '/home/pi/Downloads/FF-v2.3/./ff'
+               domfile = '/home/pi/iot/garden_domain.pddl'
+               planner_actions = self.invoke_planner(domfile, probfile, planner)
 
                if planner_actions != None:
                     print(planner_actions)
 
                actions = self.contextualize_planner_actions(planner_actions)
                self.execute_actions(actions)
-               self.out_queue.put(actions)
 
                time.sleep(self.planner_timeout)

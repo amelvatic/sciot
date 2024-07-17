@@ -6,7 +6,7 @@ import sys
 import threading
 import time
 
-api_key = "7446051327:AAGHah11srRcytIcZm7zc001sg3_ykQ5LPA"
+api_key = "API_KEY_HERE"
 
 def get_updates(tkn=''):
     update_timeout = 10

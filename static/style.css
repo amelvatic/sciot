@@ -215,7 +215,7 @@ input:checked ~ .content-test {
 .content_testimonial-1 .picto {
   height: 100px;
   width: 100px;
-  background-image: url("");
+  background-image: url("/home/vishal/Desktop/sciot/static/TemperatureCelsiusAlt.svg");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -223,7 +223,7 @@ input:checked ~ .content-test {
 .content_testimonial-5 .picto {
   height: 100px;
   width: 100px;
-  background-image: url("");
+  background-image: url("/home/vishal/Desktop/sciot/static/TemperatureCelsiusAlt.svg");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -231,7 +231,7 @@ input:checked ~ .content-test {
 .content_testimonial-6 .picto {
   height: 100px;
   width: 100px;
-  background-image: url("");
+  background-image: url("/home/vishal/Desktop/sciot/static/TemperatureCelsiusAlt.svg");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -335,7 +335,8 @@ label.label_testimonial-1:before {
   width: 50px;
   height: 50px;
   margin-left: 15px;
-  background-image: url("https://i.postimg.cc/RFBHkG46/diamond-Pest-Logo-small.jpg");
+  background-image: url("https://i.postimg.cc/XvFpSRpK/Temperature-Celsius.png");
+  
   background-position: center;
   background-size: 75% 75%;
   background-repeat: no-repeat;
@@ -349,7 +350,7 @@ label.label_testimonial-2:before {
   width: 50px;
   height: 50px;
   margin-left: 15px;
-  background-image: url("https://i.postimg.cc/bsqXXKCV/a-Plus-Handyman-Logo.jpg");
+  background-image: url("https://i.postimg.cc/fb4Y9jdK/Humidity-Percentage-Outline.png");
   background-position: center;
   background-size: 75% 75%;
   border-radius: 50%;
@@ -363,7 +364,7 @@ label.label_testimonial-3:before {
   width: 50px;
   height: 50px;
   margin-left: 15px;
-  background-image: url("https://i.postimg.cc/zV7sq04z/mod-Movers-Logo.jpg");
+  background-image: url("https://i.postimg.cc/G3s8kscg/Soil-Moisture-Field.png");
   background-position: center;
   background-size: 75% 75%;
   background-repeat: no-repeat;
@@ -377,7 +378,7 @@ label.label_testimonial-4:before {
   width: 50px;
   height: 50px;
   margin-left: 15px;
-  background-image: url("https://i.postimg.cc/4Y3rypTz/ak-Pest-Control-Logo.jpg");
+  background-image: url("https://i.postimg.cc/x8D9n8Nt/SunFill.png");
   background-position: center;
   background-size: 75% 75%;
   background-repeat: no-repeat;
@@ -390,7 +391,7 @@ label.label_testimonial-5:before {
   width: 50px;
   height: 50px;
   margin-left: 15px;
-  background-image: url("https://i.postimg.cc/4Y3rypTz/ak-Pest-Control-Logo.jpg");
+  background-image: url("https://i.postimg.cc/CxQdBjZK/Lightbulb-Fill.png");
   background-position: center;
   background-size: 75% 75%;
   background-repeat: no-repeat;
@@ -403,7 +404,7 @@ label.label_testimonial-6:before {
   width: 50px;
   height: 50px;
   margin-left: 15px;
-  background-image: url("https://i.postimg.cc/4Y3rypTz/ak-Pest-Control-Logo.jpg");
+  background-image: url("https://i.postimg.cc/DZBzhLKF/Water.png");
   background-position: center;
   background-size: 75% 75%;
   background-repeat: no-repeat;

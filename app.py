@@ -8,7 +8,8 @@ app = Flask(__name__)
 def cb():
     col = request.args.get('data')
     address = 'samples/'+col+'.csv'
-    frame = pd.read_csv(address).head(23)
+    frame = pd.read_csv(address).head(100)
+    frame['timestamp'] = pd.to_datetime(frame['timestamp'])
     fig = px.line(frame, x="timestamp", y="value")
     graphJSON = fig.to_json()
     return graphJSON

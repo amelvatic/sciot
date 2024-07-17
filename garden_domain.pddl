@@ -29,11 +29,9 @@
    (:action TURN_ON_LIGHT
         :parameters (?s - state)
         :precondition (and
-            (too-dark ?s)
             (not (lamp-on ?s))
         )
         :effect (and
-            (not (too-dark ?s))
             (lamp-on ?s)
         )
     )
@@ -41,11 +39,9 @@
     (:action TURN_OFF_LIGHT
         :parameters (?s - state)
         :precondition (and
-            (too-bright ?s)
             (lamp-on ?s)
         )
         :effect (and
-            (not (too-bright ?s))
             (not (lamp-on ?s))
         )
     )
@@ -53,12 +49,9 @@
     (:action TURN_ON_FAN
         :parameters (?s - state ?w - world)
         :precondition (and
-            (too-warm ?s)
-            (raining ?w)
             (not (fan-on ?s))
         )
         :effect (and
-            (not (too-warm ?s))
             (fan-on ?s)
         )
     )
@@ -66,11 +59,9 @@
     (:action TURN_OFF_FAN
         :parameters (?s - state)
         :precondition (and
-            (too-cold ?s)
             (fan-on ?s)
         )
         :effect (and
-            (not (too-cold ?s))
             (not (fan-on ?s))
         )
     )
@@ -83,7 +74,6 @@
             (not (lid-open ?s))
         )
         :effect (and
-            (not (too-warm ?s))
             (lid-open ?s)
         )
     )

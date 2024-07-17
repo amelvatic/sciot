@@ -19,12 +19,6 @@
 // Create a stepper motor object
 Stepper stepper(STEPS_PER_REV, 8, 10, 9, 11); // Pins for ULN2003 driver
 
-// Variables to keep track of state
-bool waterPumpState = false;
-bool lightState = false;
-bool lidState = false;
-
-
 void setup() {
   // Initialize serial communication
   Serial.begin(9600);
@@ -39,7 +33,7 @@ void setup() {
   digitalWrite(lightPin, LOW);
   
   // Set the speed for the stepper motor
-  stepper.setSpeed(10); // Speed in RPM
+  stepper.setSpeed(5); // Speed in RPM
 }
 
 void loop() {
@@ -58,7 +52,6 @@ void handleCommand(String command) {
       digitalWrite(lidPower, LOW);
       stepper.step(STEPS_PER_REV / 5); // rotate counterclockwise
       Serial.println("Lid is: OPEN");
-      lidState = true;
       digitalWrite(lidPower, HIGH);
     }
   } else if (command == "LID_CLOSE") {
@@ -66,20 +59,19 @@ void handleCommand(String command) {
       digitalWrite(lidPower, LOW);
       stepper.step(-STEPS_PER_REV / 5); // rotate clockwise
       Serial.println("Lid is: CLOSED");
-      lidState = false;
       digitalWrite(lidPower, HIGH);
     }
   } else if (command == "LIGHT_ON") {
-    lightState = true;
     digitalWrite(lightPin, HIGH);
     Serial.println("Light: ON");
   } else if (command == "LIGHT_OFF") {
-    lightState = false;
     digitalWrite(lightPin, LOW);
     Serial.println("Light: OFF");
   } else if (command == "GET_HUMIDITY") {
     Serial.print("Soil_moisture_level:");
     Serial.println(readHum());
+  } else if (command == "GET_LID_STATE") {
+    Serial.println(digitalRead(lidgate));
   } else {
     Serial.print("Unknown command {");
     Serial.print(command);

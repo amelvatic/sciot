@@ -21,6 +21,10 @@
 
         (too-warm ?s - state)
         (too-cold ?s - state)
+
+        (too-much-hum ?s - state)
+        (too-little-hum ?s - state)
+
         (fan-on ?s - state)
 
         (lid-open ?s - state)

@@ -27,7 +27,7 @@ import time
                time.sleep(5)'''
 
 class Reasoner():
-     def __init__(self, planner_timeout=30):
+     def __init__(self, planner_timeout=10):
           #super(Reasoner, self).__init__()
           self.input_data = {}
           self.planner_timeout = planner_timeout
@@ -150,14 +150,31 @@ class Reasoner():
                          context += ["too-cold s"]
                     elif latest_value[0] >= too_warm_threshold:
                          context += ["too-warm s"]
+                    if latest_value[1] <= too_little_airhum_threshold:
+                         context += ["too-litlle-hum s"]
+                    elif latest_value[1] >= too_much_airhum_threshold:
+                         context += ["too-much-hum s"]
                except Exception as e:
                     print("Wrong data format: air_t&h: " + str(e))
      
           if 'weather' in self.input_data:
                try:
-                    pass#context += ["raining w"]
+                    values = []
+                    for reading in self.input_data['weather']:
+                         v = reading.strip().split(',[')[1]
+                         v = v[:-1]
+                         vs = v.split(',')
+                         res = []
+                         for x in vs:
+                              res += [x.strip()]
+                         values += [res]
+
+                    latest_value = values[len(values)-1]
+
+                    if latest_value[0] == "false":
+                         context += ["raining w"]
                except Exception as e:
-                    print("Wrong data format: weather: " + str(e))
+                    pass
 
           return context
 
@@ -179,11 +196,10 @@ class Reasoner():
           tail = ''')
                (:goal (and
                  (and(or(tank-full s) (refill-indicator-light-on s))(not(and(refill-indicator-light-on s)(tank-full s))))
-                 (not(too-bright s))
 
                  (and(or(not(too-dark s))(lamp-on s))(not(and(not(too-dark s))(lamp-on s))))
                  (and(or(not(too-warm s))(fan-on s))(not(and(not(too-warm s))(fan-on s))))
-                 (not(too-cold s))
+                 (and(or(not(too-much-hum s))(lid-open s))(not(and(not(too-much-hum s))(lid-open s))))
                  (or(not(tank-full s))(not(low-soil-hum s)))
                  (not(and(raining w)(lid-open s)))
                )
@@ -204,7 +220,7 @@ class Reasoner():
           #/home/amel/sciot/FF-v2.3/./ff -o /home/amel/dev/sciot/garden_domain.pddl -f /home/amel/dev/sciot/garden_problem.pddl
           result = subprocess.run([planner, '-o', domfile, '-f', probfile], stdout=subprocess.PIPE)
           resultstring = result.stdout.decode('utf-8')
-          #print(resultstring)
+          print(resultstring)
 
           if resultstring=="":
                print("Something went wrong executing the planner")
@@ -321,12 +337,12 @@ class Reasoner():
                          planner_actions = self.invoke_planner(pi_domfile, probfile, pi_planner)
                     else:
                          planner = '/home/amel/sciot/FF-v2.3/./ff'
-                         domfile = '/home/amel/dev/sciot/garden_domain.pddl'
+                         domfile = '/home/amel/dev/sciot2/sciot/garden_domain.pddl'
                          planner_actions = self.invoke_planner(domfile, probfile, planner)
      
                     actions = []
                     if planner_actions != None:
-                         print(planner_actions)
+                         print("Planner actions: " + str(planner_actions))
                          actions = self.contextualize_planner_actions(planner_actions)
 
                     self.execute_actions(actions)

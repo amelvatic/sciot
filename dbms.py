@@ -1,6 +1,5 @@
 from multiprocessing import Process
 from multiprocessing.connection import Listener
-import json
     
 class DBMS(Process):
     def __init__(self, filenames={'air_t&h': 'temp_hum_data.txt', 'soil_humidity': 'soil_hum_data.txt', 
@@ -80,11 +79,9 @@ class DBMS(Process):
                                                 try:
                                                     line = file.readline()
                                                     while line:
-                                                        line = file.readline()
-                                                        for idx, x in enumerate(xs):
-                                                            if(idx < no_data_blocks):
-                                                                xs[idx+1] = x
+                                                        xs = xs[-1:] + xs[:-1]
                                                         xs[0] = line
+                                                        line = file.readline()
                                                     if(xs[0].strip()==''):
                                                         xs = xs[1:]
                                                     else:
@@ -136,11 +133,9 @@ class DBMS(Process):
                                                         try:
                                                             line = file.readline()
                                                             while line:
-                                                                line = file.readline()
-                                                                for idx, x in enumerate(xs):
-                                                                    if(idx < no_data_blocks):
-                                                                        xs[idx+1] = x
+                                                                xs = xs[-1:] + xs[:-1]
                                                                 xs[0] = line
+                                                                line = file.readline()
                                                             
                                                             if(xs[0].strip()==''):
                                                                 xs = xs[1:]

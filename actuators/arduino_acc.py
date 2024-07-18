@@ -33,18 +33,6 @@ def on_message(client, userdata, message):
             return 
     ser.write(data_to_send.encode())
 
-    # time.sleep(1)
-    # try:
-    #     response = ser.readline()
-    #     if not response:
-    #         print("Arduino not responded")
-    #         return
-    #     response = response.decode()
-    #     if (response != "Light: ON\n\r" and state == "True") or (response != "Light: OFF\n\r" and state == "False"):
-    #         print("Received: ", response)
-    # except:
-    #     pass
-
 
 def on_connect(client, userdata, flags, rc):
     print("Arduino connected to Gateway")
